@@ -1,12 +1,18 @@
-import UserProfile from '../components/profile/user-profile';
 import { getSession } from 'next-auth/react';
-function ProfilePage() {
-  return <UserProfile />;
+
+import UserProfile from '../components/profile/user-profile';
+
+function ProfilePage(props) {
+  const {session} = props;
+  // console.log(session);
+  return <UserProfile data={session} />;
 }
-
+//below code is the restriction for accessing the page without login
 export async function getServerSideProps(context) {
+  
   const session = await getSession({ req: context.req });
-
+  
+  
   if (!session) {
     return {
       redirect: {
@@ -15,7 +21,7 @@ export async function getServerSideProps(context) {
       },
     };
   }
-
+  
   return {
     props: { session },
   };
